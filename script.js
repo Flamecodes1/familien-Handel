@@ -1,89 +1,114 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('itemForm');
-  const itemsContainer = document.getElementById('itemsContainer');
+/* styles.css */
+* {
+  box-sizing: border-box;
+}
 
-  // Artikel aus localStorage laden (falls vorhanden)
-  let items = JSON.parse(localStorage.getItem('items')) || [];
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  color: #333;
+}
 
-  // Funktion, um Artikel anzuzeigen
-  function renderItems() {
-    itemsContainer.innerHTML = '';
-    if (items.length === 0) {
-      itemsContainer.innerHTML = '<p>Keine Artikel verfügbar.</p>';
-      return;
-    }
-    items.forEach((item, index) => {
-      const card = document.createElement('div');
-      card.className = 'item-card';
+header {
+  background: #4CAF50;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
 
-      if (item.imageData) {
-        const img = document.createElement('img');
-        img.src = item.imageData;
-        img.alt = item.title;
-        card.appendChild(img);
-      }
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
 
-      const title = document.createElement('h3');
-      title.textContent = item.title;
-      card.appendChild(title);
+.upload-section, .items-section {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-      const description = document.createElement('p');
-      description.textContent = item.description;
-      card.appendChild(description);
+form label {
+  display: block;
+  margin: 0.5rem 0 0.25rem;
+}
 
-      if (item.price) {
-        const price = document.createElement('p');
-        price.textContent = 'Preis: ' + item.price;
-        card.appendChild(price);
-      }
+form input[type="text"],
+form input[type="email"],
+form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-      const contactLink = document.createElement('a');
-      contactLink.className = 'contact-button';
-      contactLink.href = 'mailto:' + item.email;
-      contactLink.textContent = 'Kontaktieren';
-      card.appendChild(contactLink);
+form input[type="file"] {
+  margin-top: 0.5rem;
+}
 
-      itemsContainer.appendChild(card);
-    });
-  }
+form button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  // Vorhandene Artikel anzeigen
-  renderItems();
+form button:hover {
+  background: #45a049;
+}
 
-  // Formular-Submit-Event
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
+.items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
 
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const price = document.getElementById('price').value;
-    const email = document.getElementById('email').value;
-    const imageInput = document.getElementById('image');
+.item-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  flex: 1 1 calc(50% - 1rem);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
 
-    const newItem = {
-      title,
-      description,
-      price,
-      email,
-      imageData: null
-    };
+.item-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
 
-    // Wenn ein Bild ausgewählt wurde, erstelle eine Data-URL
-    if (imageInput.files && imageInput.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        newItem.imageData = event.target.result;
-        items.push(newItem);
-        localStorage.setItem('items', JSON.stringify(items));
-        renderItems();
-        form.reset();
-      };
-      reader.readAsDataURL(imageInput.files[0]);
-    } else {
-      items.push(newItem);
-      localStorage.setItem('items', JSON.stringify(items));
-      renderItems();
-      form.reset();
-    }
-  });
-});
+.item-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.item-card p {
+  flex: 1;
+}
+
+.contact-button {
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.contact-button:hover {
+  background: #1976D2;
+}
