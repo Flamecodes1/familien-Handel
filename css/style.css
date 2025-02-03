@@ -1,29 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Familien-Handel</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
-  <header>
-    <h1>Familien-Handel</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Angebote</a></li>
-        <li><a href="#">Gesuche</a></li>
-        <li><a href="#">Nachrichten</a></li>
-        <li><a href="#">Mein Konto</a></li>
-      </ul>
-    </nav>
-  </header>
+body {
+  background-color: #e0f2f7; /* Helles Blau */
+  font-family: 'Roboto', sans-serif; /* Moderne Schrift */
+  color: #1a237e; /* Dunkleres Blau */
+}
 
-  <main>
-    </main>
+header {
+  padding: 20px;
+  text-align: center;
+}
 
-  <footer>
-    <p>&copy; 2023 Familien-Handel</p>
-  </footer>
+h1 {
+  font-family: 'Open Sans', sans-serif; /* Moderne Schrift */
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  display: inline;
+  margin: 0 10px;
+}
+
+nav a {
+  color: #1a237e; /* Dunkleres Blau */
+  text-decoration: none;
+}
+
+main {
+  padding: 20px;
+}
+
+footer {
+  background-color: #e0f2f7; /* Helles Blau */
+  padding: 10px;
+  text-align: center;
+}
