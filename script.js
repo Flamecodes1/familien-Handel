@@ -1,114 +1,131 @@
-/* styles.css */
-* {
-  box-sizing: border-box;
-}
+// script.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
+  query, 
+  orderBy, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f5f5f5;
-  color: #333;
-}
+// Deine Firebase-Konfiguration (ersetze diese Werte durch deine eigenen, falls nötig)
+const firebaseConfig = {
+  apiKey: "AIzaSyAygS_8Z-cfAZz2uPz1Yp0A6GoGPsKQ6dU",
+  authDomain: "familien-handel.firebaseapp.com",
+  projectId: "familien-handel",
+  storageBucket: "familien-handel.firebasestorage.app",
+  messagingSenderId: "575671866152",
+  appId: "1:575671866152:web:f98ecf4735ac4456def61d",
+  measurementId: "G-208YZ2YH7S"
+};
 
-header {
-  background: #4CAF50;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
+// Firebase initialisieren
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-main {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('itemForm');
+  const itemsContainer = document.getElementById('itemsContainer');
 
-.upload-section, .items-section {
-  background: white;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+  // Funktion: Artikel aus Firestore laden und anzeigen
+  async function renderItems() {
+    itemsContainer.innerHTML = '';
+    try {
+      const itemsRef = collection(db, 'items');
+      const q = query(itemsRef, orderBy('timestamp', 'desc'));
+      const querySnapshot = await getDocs(q);
 
-form label {
-  display: block;
-  margin: 0.5rem 0 0.25rem;
-}
+      if (querySnapshot.empty) {
+        itemsContainer.innerHTML = '<p>Keine Artikel verfügbar.</p>';
+      } else {
+        querySnapshot.forEach((doc) => {
+          const item = doc.data();
+          const card = document.createElement('div');
+          card.className = 'item-card';
 
-form input[type="text"],
-form input[type="email"],
-form textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+          if (item.imageData) {
+            const img = document.createElement('img');
+            img.src = item.imageData;
+            img.alt = item.title;
+            card.appendChild(img);
+          }
 
-form input[type="file"] {
-  margin-top: 0.5rem;
-}
+          const title = document.createElement('h3');
+          title.textContent = item.title;
+          card.appendChild(title);
 
-form button {
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+          const description = document.createElement('p');
+          description.textContent = item.description;
+          card.appendChild(description);
 
-form button:hover {
-  background: #45a049;
-}
+          if (item.price) {
+            const price = document.createElement('p');
+            price.textContent = 'Preis: ' + item.price;
+            card.appendChild(price);
+          }
 
-.items-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
+          const contactLink = document.createElement('a');
+          contactLink.className = 'contact-button';
+          contactLink.href = 'mailto:' + item.email;
+          contactLink.textContent = 'Kontaktieren';
+          card.appendChild(contactLink);
 
-.item-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 1rem;
-  flex: 1 1 calc(50% - 1rem);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-}
+          itemsContainer.appendChild(card);
+        });
+      }
+    } catch (error) {
+      console.error("Fehler beim Laden der Artikel: ", error);
+      itemsContainer.innerHTML = '<p>Fehler beim Laden der Artikel.</p>';
+    }
+  }
 
-.item-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin-bottom: 1rem;
-}
+  // Artikel beim Laden der Seite abrufen
+  renderItems();
 
-.item-card h3 {
-  margin: 0;
-  font-size: 1.2rem;
-}
+  // Formular-Submit-Event: Artikel speichern
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-.item-card p {
-  flex: 1;
-}
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const price = document.getElementById('price').value;
+    const email = document.getElementById('email').value;
+    const imageInput = document.getElementById('image');
 
-.contact-button {
-  background: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 0.5rem;
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-  margin-top: 1rem;
-}
+    // Objekt, das den neuen Artikel beschreibt
+    const newItem = {
+      title,
+      description,
+      price,
+      email,
+      imageData: null,
+      timestamp: serverTimestamp()
+    };
 
-.contact-button:hover {
-  background: #1976D2;
-}
+    // Falls ein Bild ausgewählt wurde, erstelle eine Data-URL
+    if (imageInput.files && imageInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        newItem.imageData = event.target.result;
+        try {
+          await addDoc(collection(db, 'items'), newItem);
+          renderItems();
+          form.reset();
+        } catch (error) {
+          console.error("Fehler beim Speichern des Artikels: ", error);
+        }
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    } else {
+      try {
+        await addDoc(collection(db, 'items'), newItem);
+        renderItems();
+        form.reset();
+      } catch (error) {
+        console.error("Fehler beim Speichern des Artikels: ", error);
+      }
+    }
+  });
+});
