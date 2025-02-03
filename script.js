@@ -1,5 +1,6 @@
 // script.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
 import { 
   getFirestore, 
   collection, 
@@ -10,19 +11,20 @@ import {
   serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-// Deine Firebase-Konfiguration (ersetze diese Werte durch deine eigenen, falls nötig)
+// Firebase-Konfiguration – achte darauf, dass der storageBucket korrekt ist!
 const firebaseConfig = {
-  apiKey: "AIzaSyAygS_8Z-cfAZz2uPz1Yp0A6GoGPsKQ6dU",
-  authDomain: "familien-handel.firebaseapp.com",
-  projectId: "familien-handel",
-  storageBucket: "familien-handel.firebasestorage.app",
-  messagingSenderId: "575671866152",
-  appId: "1:575671866152:web:f98ecf4735ac4456def61d",
-  measurementId: "G-208YZ2YH7S"
+  apiKey: "AIzaSyAQkiz2W4ZDmBIaHv18jwX_Efxx9H0v_Sw",
+  authDomain: "familien-handel-a46ae.firebaseapp.com",
+  projectId: "familien-handel-a46ae",
+  storageBucket: "familien-handel-a46ae.appspot.com", // Korrektur hier!
+  messagingSenderId: "120658821206",
+  appId: "1:120658821206:web:15a3d52f93f7c37a11fbf7",
+  measurementId: "G-EEXQLYFC25"
 };
 
 // Firebase initialisieren
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -81,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Artikel beim Laden der Seite abrufen
+  // Beim Laden der Seite vorhandene Artikel anzeigen
   renderItems();
 
-  // Formular-Submit-Event: Artikel speichern
+  // Formular-Submit-Event: Neuen Artikel speichern
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -94,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('email').value;
     const imageInput = document.getElementById('image');
 
-    // Objekt, das den neuen Artikel beschreibt
     const newItem = {
       title,
       description,
@@ -104,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
       timestamp: serverTimestamp()
     };
 
-    // Falls ein Bild ausgewählt wurde, erstelle eine Data-URL
     if (imageInput.files && imageInput.files[0]) {
       const reader = new FileReader();
       reader.onload = async (event) => {
