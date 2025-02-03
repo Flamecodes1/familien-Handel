@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Familienhandel</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Familienhandel</h1>
+  </header>
+  <main>
+    <section class="upload-section">
+      <h2>Neuen Artikel einstellen</h2>
+      <form id="itemForm">
+        <label for="title">Titel:</label>
+        <input type="text" id="title" name="title" required>
 
+        <label for="description">Beschreibung:</label>
+        <textarea id="description" name="description" required></textarea>
+
+        <label for="price">Preis (optional):</label>
+        <input type="text" id="price" name="price">
+
+        <label for="email">Kontakt E-Mail:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="image">Bild (optional):</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <button type="submit">Artikel einstellen</button>
+      </form>
+    </section>
+
+    <section class="items-section">
+      <h2>Aktuelle Artikel</h2>
+      <div id="itemsContainer" class="items-container">
+        <!-- Hier werden die Artikel dynamisch eingefügt -->
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
