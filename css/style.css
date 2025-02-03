@@ -1,0 +1,26 @@
+header {
+  background-color: #f5f5dc; /* Helles Beige */
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif; /* Serifenlose Schrift */
+  color: #654321; /* Dunkelbraun */
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  display: inline;
+  margin: 0 10px;
+}
+
+nav a {
+  font-family: 'Lato', sans-serif; /* Serifenschrift */
+  color: #654321; /* Dunkelbraun */
+  text-decoration: none;
+}
